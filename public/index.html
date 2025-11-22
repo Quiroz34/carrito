@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Turbo Racer HD</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+
+<body>
+    <div id="game-container">
+        <svg id="game-svg" width="400" height="600" viewBox="0 0 400 600">
+            <defs>
+                <linearGradient id="carGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" style="stop-color:#0984e3;stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:#74b9ff;stop-opacity:1" />
+                </linearGradient>
+                <linearGradient id="enemyGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" style="stop-color:#d63031;stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:#ff7675;stop-opacity:1" />
+                </linearGradient>
+                <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                    <feGaussianBlur stdDeviation="2.5" result="coloredBlur" />
+                    <feMerge>
+                        <feMergeNode in="coloredBlur" />
+                        <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                </filter>
+            </defs>
+
+            <!-- Background -->
+            <rect x="0" y="0" width="400" height="600" class="grass-bg" />
+            <rect x="20" y="0" width="360" height="600" class="road-bg" />
+
+            <!-- Road Lines -->
+            <line x1="25" y1="0" x2="25" y2="600" stroke="#fff" stroke-width="2" opacity="0.8" />
+            <line x1="375" y1="0" x2="375" y2="600" stroke="#fff" stroke-width="2" opacity="0.8" />
+
+            <!-- Moving Road Markings Group -->
+            <g id="road-markings">
+                <line x1="140" y1="-600" x2="140" y2="600" stroke="#fff" stroke-width="2" stroke-dasharray="60,60"
+                    opacity="0.3" />
+                <line x1="260" y1="-600" x2="260" y2="600" stroke="#fff" stroke-width="2" stroke-dasharray="60,60"
+                    opacity="0.3" />
+                <line x1="140" y1="0" x2="140" y2="1200" stroke="#fff" stroke-width="2" stroke-dasharray="60,60"
+                    opacity="0.3" />
+                <line x1="260" y1="0" x2="260" y2="1200" stroke="#fff" stroke-width="2" stroke-dasharray="60,60"
+                    opacity="0.3" />
+            </g>
+
+            <!-- Particles Layer -->
+            <g id="particles"></g>
+
+            <!-- Game Elements -->
+            <g id="game-elements"></g>
+        </svg>
+
+        <div id="ui-layer" class="hidden">
+            <div style="display: flex; gap: 10px;">
+                <div class="hud-panel" id="score">SCORE: 120</div>
+                <div class="hud-panel" id="level">LVL: 1</div>
+            </div>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <div class="hud-panel" id="speed">120 KM/H</div>
+                <div id="btn-pause">||</div>
+            </div>
+        </div>
+
+        <!-- Main Menu -->
+        <div id="main-menu" class="screen">
+            <h1>TURBO<br>RACER</h1>
+            <button id="btn-play">START RACE</button>
+            <button id="btn-highscores" class="secondary">HIGH SCORES</button>
+            <button id="btn-credits" class="secondary">CREDITS</button>
+        </div>
+
+        <!-- High Scores -->
+        <div id="high-scores" class="screen hidden">
+            <h2>TOP RACERS</h2>
+            <ul id="high-scores-list">
+                <!-- Populated by JS -->
+            </ul>
+            <button id="btn-highscores-back" class="secondary" style="margin-top: 40px;">BACK</button>
+        </div>
+
+        <!-- Credits -->
+        <div id="credits" class="screen hidden">
+            <h2>CREDITS</h2>
+            <p>DESIGN & CODE<br><strong style="color: #0984e3;">Antigravity</strong></p>
+            <p>ENGINE<br><strong style="color: #00d2d3;">Bun Runtime</strong></p>
+            <p>GRAPHICS<br><strong style="color: #ff9f43;">Scalable Vector Graphics</strong></p>
+            <button id="btn-credits-back" class="secondary" style="margin-top: 40px;">BACK</button>
+        </div>
+
+        <!-- Paused -->
+        <div id="paused-screen" class="screen hidden">
+            <h2>PAUSED</h2>
+            <button id="btn-resume">RESUME</button>
+            <button id="btn-quit" class="danger">QUIT</button>
+        </div>
+
+        <!-- Game Over -->
+        <div id="game-over" class="screen hidden">
+            <h2 style="color: #ff6b6b; font-size: 48px;">CRASHED!</h2>
+            <div style="font-size: 16px; margin: 10px 0; color: #8395a7; letter-spacing: 2px;">FINAL SCORE</div>
+            <span id="final-score"
+                style="font-size: 72px; color: #fff; font-weight: 900; margin-bottom: 30px; text-shadow: 0 0 20px rgba(255,255,255,0.5);">0</span>
+            <button id="btn-retry" class="danger">RETRY</button>
+            <button id="btn-menu" class="secondary">MAIN MENU</button>
+        </div>
+    </div>
+    <script type="module" src="/game.js"></script>
+</body>
+
+</html>

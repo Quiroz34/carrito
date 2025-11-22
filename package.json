@@ -1,0 +1,14 @@
+{
+  "name": "proyectocar",
+  "module": "src/server/index.ts",
+  "type": "module",
+  "scripts": {
+    "start": "bun run src/server/index.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}
