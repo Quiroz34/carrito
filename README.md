@@ -1,15 +1,38 @@
-# proyectocar
+# Turbo Racer HD
 
-To install dependencies:
+Un juego de carreras arcade desarrollado con Python (Flask) y JavaScript.
+
+## Requisitos
+
+- Python 3.8 o superior
+
+## Instalación
+
+Instalar dependencias:
 
 ```bash
-bun install
+pip install -r requirements.txt
 ```
 
-To run:
+## Ejecutar el Juego
 
 ```bash
-bun run index.ts
+python server.py
 ```
 
-This project was created using `bun init` in bun v1.3.3. [Bun](https://bun.com) is a fast all-in-one JavaScript runtime.
+Luego abre tu navegador en `http://localhost:3000`
+
+## Controles
+
+- **Flechas Izquierda/Derecha**: Mover el auto
+- **P**: Pausar/Reanudar
+- **Click**: Navegar menús
+
+## Características
+
+- Sistema de niveles progresivo
+- Aumento continuo de velocidad
+- Sistema de partículas
+- Guardado de puntuaciones altas
+- Efectos visuales con SVG
+

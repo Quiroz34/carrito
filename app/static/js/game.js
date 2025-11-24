@@ -46,23 +46,22 @@ const LANE_WIDTH = 120;
 const LANE_OFFSET = 20;
 
 // State
-type GameState = 'MENU' | 'PLAYING' | 'PAUSED' | 'CREDITS' | 'HIGHSCORES' | 'GAMEOVER';
-let currentState: GameState = 'MENU';
+let currentState = 'MENU';
 
 let playerX = LANE_OFFSET + LANE_WIDTH * 1.5 - CAR_WIDTH / 2;
 let playerY = GAME_HEIGHT - CAR_HEIGHT - 40;
 let score = 120;
 let speed = 6; // 120 km/h
 let level = 1;
-let obstacles: { x: number; y: number; element: Element }[] = [];
-let particles: { x: number; y: number; vx: number; vy: number; life: number; element: SVGElement }[] = [];
+let obstacles = [];
+let particles = [];
 let lastTime = 0;
 let obstacleSpawnTimer = 0;
 let particleSpawnTimer = 0;
 let roadOffsetY = 0;
 
 // Helper to create car SVG
-function createCarSVG(type: 'player' | 'enemy') {
+function createCarSVG(type) {
     const group = document.createElementNS("http://www.w3.org/2000/svg", "g");
     if (type === 'player') group.setAttribute("filter", "url(#glow)");
 
@@ -146,12 +145,12 @@ function updatePlayerPosition() {
 }
 
 // Particle System
-function createParticle(x: number, y: number) {
+function createParticle(x, y) {
     const p = document.createElementNS("http://www.w3.org/2000/svg", "circle");
     p.setAttribute("r", (Math.random() * 2 + 1).toString());
     p.setAttribute("fill", "#bdc3c7");
     p.setAttribute("opacity", "0.6");
-    particlesLayer!.appendChild(p);
+    particlesLayer.appendChild(p);
 
     particles.push({
         x, y,
@@ -163,12 +162,12 @@ function createParticle(x: number, y: number) {
 }
 
 // High Scores Logic
-function getHighScores(): number[] {
+function getHighScores() {
     const stored = localStorage.getItem('turboRacerHighScores');
     return stored ? JSON.parse(stored) : [0, 0, 0, 0, 0];
 }
 
-function saveHighScore(newScore: number) {
+function saveHighScore(newScore) {
     const scores = getHighScores();
     scores.push(newScore);
     scores.sort((a, b) => b - a);
@@ -178,7 +177,7 @@ function saveHighScore(newScore: number) {
 
 function updateHighScoresList() {
     const scores = getHighScores();
-    highScoresList!.innerHTML = scores.map((s, i) => `
+    highScoresList.innerHTML = scores.map((s, i) => `
         <li>
             <span>#${i + 1}</span>
             <span>${s}</span>
@@ -194,22 +193,22 @@ function startGame() {
     level = 1;
 
     // Cleanup
-    obstacles.forEach(obs => gameElements!.removeChild(obs.element));
+    obstacles.forEach(obs => gameElements.removeChild(obs.element));
     obstacles = [];
-    particles.forEach(p => particlesLayer!.removeChild(p.element));
+    particles.forEach(p => particlesLayer.removeChild(p.element));
     particles = [];
 
     playerX = LANE_OFFSET + LANE_WIDTH * 1.5 - CAR_WIDTH / 2;
     updatePlayerPosition();
 
     // UI Updates
-    mainMenu!.classList.add('hidden');
-    gameOverScreen!.classList.add('hidden');
-    pausedScreen!.classList.add('hidden');
-    uiLayer!.classList.remove('hidden');
-    scoreElement!.textContent = `SCORE: ${score}`;
-    speedElement!.textContent = `120 KM/H`;
-    levelElement!.textContent = `LVL: 1`;
+    mainMenu.classList.add('hidden');
+    gameOverScreen.classList.add('hidden');
+    pausedScreen.classList.add('hidden');
+    uiLayer.classList.remove('hidden');
+    scoreElement.textContent = `SCORE: ${score}`;
+    speedElement.textContent = `120 KM/H`;
+    levelElement.textContent = `LVL: 1`;
 
     lastTime = performance.now();
     requestAnimationFrame(gameLoop);
@@ -218,10 +217,10 @@ function startGame() {
 function togglePause() {
     if (currentState === 'PLAYING') {
         currentState = 'PAUSED';
-        pausedScreen!.classList.remove('hidden');
+        pausedScreen.classList.remove('hidden');
     } else if (currentState === 'PAUSED') {
         currentState = 'PLAYING';
-        pausedScreen!.classList.add('hidden');
+        pausedScreen.classList.add('hidden');
         lastTime = performance.now();
         requestAnimationFrame(gameLoop);
     }
@@ -229,33 +228,33 @@ function togglePause() {
 
 function showMainMenu() {
     currentState = 'MENU';
-    mainMenu!.classList.remove('hidden');
-    creditsScreen!.classList.add('hidden');
-    highScoresScreen!.classList.add('hidden');
-    gameOverScreen!.classList.add('hidden');
-    pausedScreen!.classList.add('hidden');
-    uiLayer!.classList.add('hidden');
+    mainMenu.classList.remove('hidden');
+    creditsScreen.classList.add('hidden');
+    highScoresScreen.classList.add('hidden');
+    gameOverScreen.classList.add('hidden');
+    pausedScreen.classList.add('hidden');
+    uiLayer.classList.add('hidden');
 }
 
 function showCredits() {
     currentState = 'CREDITS';
-    mainMenu!.classList.add('hidden');
-    creditsScreen!.classList.remove('hidden');
+    mainMenu.classList.add('hidden');
+    creditsScreen.classList.remove('hidden');
 }
 
 function showHighScores() {
     currentState = 'HIGHSCORES';
     updateHighScoresList();
-    mainMenu!.classList.add('hidden');
-    highScoresScreen!.classList.remove('hidden');
+    mainMenu.classList.add('hidden');
+    highScoresScreen.classList.remove('hidden');
 }
 
 function gameOver() {
     currentState = 'GAMEOVER';
     saveHighScore(score);
-    gameOverScreen!.classList.remove('hidden');
-    finalScoreElement!.textContent = `${score}`;
-    uiLayer!.classList.add('hidden');
+    gameOverScreen.classList.remove('hidden');
+    finalScoreElement.textContent = `${score}`;
+    uiLayer.classList.add('hidden');
 }
 
 function createObstacle() {
@@ -269,11 +268,11 @@ function createObstacle() {
     obstacle.setAttribute("transform", `rotate(180, ${CAR_WIDTH / 2}, ${CAR_HEIGHT / 2})`);
     g.setAttribute("transform", `translate(${x}, ${y})`);
 
-    gameElements!.appendChild(g);
+    gameElements.appendChild(g);
     obstacles.push({ x, y, element: g });
 }
 
-function checkCollision(obs: { x: number; y: number }) {
+function checkCollision(obs) {
     const padding = 8;
     return (
         playerX + padding < obs.x + OBSTACLE_WIDTH - padding &&
@@ -284,16 +283,16 @@ function checkCollision(obs: { x: number; y: number }) {
 }
 
 // Event Listeners
-btnPlay!.addEventListener('click', startGame);
-btnCredits!.addEventListener('click', showCredits);
-btnCreditsBack!.addEventListener('click', showMainMenu);
-btnHighScores!.addEventListener('click', showHighScores);
-btnHighScoresBack!.addEventListener('click', showMainMenu);
-btnRetry!.addEventListener('click', startGame);
-btnMenu!.addEventListener('click', showMainMenu);
-btnPause!.addEventListener('click', togglePause);
-btnResume!.addEventListener('click', togglePause);
-btnQuit!.addEventListener('click', showMainMenu);
+btnPlay.addEventListener('click', startGame);
+btnCredits.addEventListener('click', showCredits);
+btnCreditsBack.addEventListener('click', showMainMenu);
+btnHighScores.addEventListener('click', showHighScores);
+btnHighScoresBack.addEventListener('click', showMainMenu);
+btnRetry.addEventListener('click', startGame);
+btnMenu.addEventListener('click', showMainMenu);
+btnPause.addEventListener('click', togglePause);
+btnResume.addEventListener('click', togglePause);
+btnQuit.addEventListener('click', showMainMenu);
 
 window.addEventListener('keydown', (e) => {
     if (e.key === 'p' || e.key === 'P') {
@@ -317,7 +316,7 @@ window.addEventListener('keydown', (e) => {
 });
 
 // Game Loop
-function gameLoop(timestamp: number) {
+function gameLoop(timestamp) {
     if (currentState !== 'PLAYING') return;
 
     const deltaTime = timestamp - lastTime;
@@ -326,7 +325,7 @@ function gameLoop(timestamp: number) {
     // Road Animation
     roadOffsetY += speed;
     if (roadOffsetY >= 120) roadOffsetY = 0;
-    roadMarkings!.setAttribute("transform", `translate(0, ${roadOffsetY})`);
+    roadMarkings.setAttribute("transform", `translate(0, ${roadOffsetY})`);
 
     // Particles
     particleSpawnTimer += deltaTime;
@@ -345,7 +344,7 @@ function gameLoop(timestamp: number) {
         p.life -= 0.05;
 
         if (p.life <= 0) {
-            particlesLayer!.removeChild(p.element);
+            particlesLayer.removeChild(p.element);
             particles.splice(i, 1);
         } else {
             p.element.setAttribute("cx", p.x.toString());
@@ -358,11 +357,11 @@ function gameLoop(timestamp: number) {
     if (score >= 1000 && level < 3) {
         level = 3;
         speed = Math.max(speed, 10); // Ensure at least 200 km/h
-        levelElement!.textContent = `LVL: 3`;
+        levelElement.textContent = `LVL: 3`;
     } else if (score >= 500 && level < 2) {
         level = 2;
         speed = Math.max(speed, 8); // Ensure at least 160 km/h
-        levelElement!.textContent = `LVL: 2`;
+        levelElement.textContent = `LVL: 2`;
     }
 
     // Spawn obstacles
@@ -389,11 +388,11 @@ function gameLoop(timestamp: number) {
         }
 
         if (obs.y > GAME_HEIGHT) {
-            gameElements!.removeChild(obs.element);
+            gameElements.removeChild(obs.element);
             obstacles.splice(i, 1);
             score++;
-            scoreElement!.textContent = `SCORE: ${score}`;
-            speedElement!.textContent = `${Math.floor(speed * 20)} KM/H`;
+            scoreElement.textContent = `SCORE: ${score}`;
+            speedElement.textContent = `${Math.floor(speed * 20)} KM/H`;
         }
     }
 
